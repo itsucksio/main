@@ -47,22 +47,20 @@
         [:a {:href (str "/" name)} name]])))
 
 (defn home-page []
-  (let [get-stuff (fn [] (GET "/api/projects" {:keywords? true :response-format :json :handler
-                    (fn [response]
-                      (.log js/console (str response))
-                      (reset! projects response))}))]
-    (get-stuff)
-    (fn []
-      [:div 
-      [:h1 "itsucks.io" [:b "/welcome"]]
-      [:p "Welcome to it sucks, a place where we can give feedback in peace. 
+  (GET "/api/projects" {:keywords? true :response-format :json :handler
+                                   (fn [response]
+                                     (.log js/console (str response))
+                                     (reset! projects response))})
+  (fn []
+    [:div
+     [:h1 "itsucks.io" [:b "/welcome"]]
+     [:p "Welcome to it sucks, a place where we can give feedback in peace.
           Please add your rants or create a new itsucks-project."]
-      [:div
-        [:h3 "Top projects"]
-        (list-projects @projects)]
-      [:p
-        [:small "Please be nice to each other."]]])))
-    
+     [:div
+      [:h3 "Top projects"]
+      (list-projects @projects)]
+     [:p
+      [:small "Please be nice to each other."]]]))
 
 (defn project-page [name]
   (fn [_]
