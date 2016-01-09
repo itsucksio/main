@@ -41,14 +41,15 @@
 
 (defn list-projects [projects]
   (for [p projects]
-    (let [name (second (first p))]
+    (let [name (:name p)]
       (.log js/console name)
       [:div
         [:a {:href (str "/" name)} name]])))
 
 (defn home-page []
-  (let [get-stuff (fn [] (GET "/api/projects" {:handler 
+  (let [get-stuff (fn [] (GET "/api/projects" {:keywords? true :response-format :json :handler
                     (fn [response]
+                      (.log js/console (str response))
                       (reset! projects response))}))]
     (get-stuff)
     (fn []
