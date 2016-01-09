@@ -12,6 +12,8 @@
 (def nav-bar (reagent/adapt-react-class (aget js/ReactBootstrap "Navbar")))
 (def nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
 (def nav-item (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
+(def input (reagent/adapt-react-class (aget js/ReactBootstrap "Input")))
+(def button (reagent/adapt-react-class (aget js/ReactBootstrap "Button")))
 
 (defn GET [url handler] 
   (ajax/GET url {:handler handler :keywords? true :response-format :json}))
@@ -40,6 +42,16 @@
       [:div
         [:a {:href (str "/" name)} name]])))
 
+(defn add-project-form []
+  (let [new-project-name (reagent/atom nil)]
+    (fn []
+      [:div
+      [input {:type "text" 
+            :value @new-project-name 
+            :placeholder "New project name"
+            :on-change #(reset! new-project-name (-> % .-target .-value))}]
+      [button { :on-click (fn [_] (js/alert @new-project-name)) } "Add project"]])))
+
 (defn home-page []
   (GET "/api/projects" #(reset! projects %))
   (fn []
@@ -50,6 +62,9 @@
       [:div
         [:h3 "Top projects"]
         (list-projects @projects)]
+      [:div
+        [:h4 "Add new project"]
+        [add-project-form]]
       [:p
         [:small "Please be nice to each other."]]]))
 
