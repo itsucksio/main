@@ -51,7 +51,7 @@
         [:h3 "Top projects"]
         (list-projects @projects)]
       [:p
-        [:small "Please be nice to each other."]]])))
+        [:small "Please be nice to each other."]]]))
 
 (def things-that-suck (reagent/atom []))
 
