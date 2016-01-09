@@ -1,12 +1,27 @@
-(ns helloreagent.core
+(ns itsucks.core
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
+              [cljsjs.react-bootstrap]
               [ajax.core :refer [GET POST]]))
 
 ;; -------------------------
+;; Wrappers
+
+(def Navbar (reagent/adapt-react-class (aget js/ReactBootstrap "Navbar")))
+(def Nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
+(def NavItem (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
+
+
+;; -------------------------
 ;; Views
+
+(defn navigation []
+  [Navbar {:brand "It Sucks!" :inverse true}
+   [Nav
+    [NavItem {:href "/"} "Home"]
+    [NavItem {:href "/about"} "About"]]])
 
 (def things-that-suck 
   [{:name "array_split" 
@@ -57,7 +72,9 @@
      [:a {:href "/"} "go to home page"]]]))
 
 (defn current-page []
-  [:div [(session/get :current-page)]])
+  [:div
+   [navigation]
+   [:div {:class "container"} [(session/get :current-page)]]])
 
 ;; -------------------------
 ;; Routes

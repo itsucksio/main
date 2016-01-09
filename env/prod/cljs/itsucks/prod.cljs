@@ -1,5 +1,5 @@
-(ns helloreagent.prod
-  (:require [helloreagent.core :as core]))
+(ns itsucks.prod
+  (:require [itsucks.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

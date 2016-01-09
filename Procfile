@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/helloreagent.jar clojure.main -m helloreagent.server
+web: java $JVM_OPTS -cp target/itsucks.jar clojure.main -m itsucks.server

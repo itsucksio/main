@@ -1,4 +1,4 @@
-(ns helloreagent.util)
+(ns itsucks.util)
 
 (defn foo-cljx [x]
   "I don't do a whole lot."

@@ -1,9 +1,9 @@
-(ns helloreagent.handler
+(ns itsucks.handler
   (:require [compojure.core :refer [GET defroutes]]
             [compojure.route :refer [not-found resources]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [include-js include-css]]
-            [helloreagent.middleware :refer [wrap-middleware]]
+            [itsucks.middleware :refer [wrap-middleware]]
             [environ.core :refer [env]]
             [cheshire.core :as json]))
 
@@ -15,7 +15,7 @@
 (defn get-projects [n]
   (json-response (map (fn [n] {:name n}) ["php" "ziggo" "recruiters"])))
 
-(defn get-complains [project]
+(defn get-complaints [project]
   (json-response [{:name "array_split" 
                    :description "seriously, who made this, someone with bipolar disease?" 
                    :likes 0}
@@ -37,6 +37,7 @@
      [:meta {:charset "utf-8"}]
      [:meta {:name "viewport"
              :content "width=device-width, initial-scale=1"}]
+     (include-css "bower_components/bootstrap/dist/css/bootstrap.min.css")
      (include-css (if (env :dev) "css/site.css" "css/site.min.css"))]
     [:body
      mount-target
@@ -46,7 +47,7 @@
 (defroutes routes
   (GET "/" [] loading-page)
   (GET "/api/projects" [] get-projects)
-  (GET "/api/projects/:name/complains" [name] (get-complains name))
+  (GET "/api/projects/:name/complains" [name] (get-complaints name))
   (GET "/about" [] loading-page)
   
   (resources "/")

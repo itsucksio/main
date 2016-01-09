@@ -1,5 +1,5 @@
-(ns helloreagent.server
-  (:require [helloreagent.handler :refer [app]]
+(ns itsucks.server
+  (:require [itsucks.handler :refer [app]]
             [environ.core :refer [env]]
             [ring.adapter.jetty :refer [run-jetty]])
   (:gen-class))

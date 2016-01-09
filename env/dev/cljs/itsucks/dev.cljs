@@ -1,5 +1,5 @@
-(ns ^:figwheel-no-load helloreagent.dev
-  (:require [helloreagent.core :as core]
+(ns ^:figwheel-no-load itsucks.dev
+  (:require [itsucks.core :as core]
             [figwheel.client :as figwheel :include-macros true]))
 
 (enable-console-print!)

@@ -1,5 +1,5 @@
-(ns helloreagent.repl
-  (:use helloreagent.handler
+(ns itsucks.repl
+  (:use itsucks.handler
         ring.server.standalone
         [ring.middleware file-info file]))
 

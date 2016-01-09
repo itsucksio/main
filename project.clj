@@ -1,4 +1,4 @@
-(defproject helloreagent "0.1.0-SNAPSHOT"
+(defproject itsucks "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -17,6 +17,7 @@
                  [environ "1.0.1"]
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [secretary "1.2.3"]
+                 [cljsjs/react-bootstrap "0.28.1-0"]
                  [venantius/accountant "0.1.6"
                   :exclusions [org.clojure/tools.reader]]
                  [cheshire "5.5.0"]
@@ -27,14 +28,14 @@
             [lein-asset-minifier "0.2.4"
              :exclusions [org.clojure/clojure]]]
 
-  :ring {:handler helloreagent.handler/app
-         :uberwar-name "helloreagent.war"}
+  :ring {:handler itsucks.handler/app
+         :uberwar-name "itsucks.war"}
 
   :min-lein-version "2.5.0"
 
-  :uberjar-name "helloreagent.jar"
+  :uberjar-name "itsucks.jar"
 
-  :main helloreagent.server
+  :main itsucks.server
 
   :clean-targets ^{:protect false} [:target-path
                                     [:cljsbuild :builds :app :compiler :output-dir]
@@ -54,7 +55,7 @@
                                         :optimizations :none
                                         :pretty-print  true}}}}
 
-  :profiles {:dev {:repl-options {:init-ns helloreagent.repl}
+  :profiles {:dev {:repl-options {:init-ns itsucks.repl}
 
                    :dependencies [[ring/ring-mock "0.3.0"]
                                   [ring/ring-devel "1.4.0"]
@@ -99,12 +100,12 @@
                               :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"
                                                  ]
                               :css-dirs ["resources/public/css"]
-                              :ring-handler helloreagent.handler/app}
+                              :ring-handler itsucks.handler/app}
 
                    :env {:dev true}
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
-                                              :compiler {:main "helloreagent.dev"
+                                              :compiler {:main "itsucks.dev"
                                                          :source-map true}}
 
 
