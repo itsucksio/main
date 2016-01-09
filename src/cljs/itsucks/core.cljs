@@ -63,13 +63,18 @@
         [:small "Please be nice to each other."]]])))
     
 
-(defn about-page [name]
+(defn project-page [name]
   (fn [_]
     [:div 
     [:h1 "itsucks.io" [:b "/" name]]
     (sucking-list things-that-suck)
     [:div 
      [:a {:href "/"} "go to home page"]]]))
+
+(defn about-page []
+  [:div
+   [:h1 "itsucks.io" [:b "/about"]]
+   [:p "Read all about us"]])
 
 (defn current-page []
   [:div
@@ -82,8 +87,11 @@
 (secretary/defroute "/" []
   (session/put! :current-page home-page))
 
+(secretary/defroute "/about" []
+                    (session/put! :current-page about-page))
+
 (secretary/defroute "/:name" [name]
-  (session/put! :current-page (about-page name)))
+                    (session/put! :current-page (project-page name)))
 
 ;; -------------------------
 ;; Initialize app
