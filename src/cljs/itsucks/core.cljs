@@ -9,19 +9,19 @@
 ;; -------------------------
 ;; Wrappers
 
-(def Navbar (reagent/adapt-react-class (aget js/ReactBootstrap "Navbar")))
-(def Nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
-(def NavItem (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
+(def nav-bar (reagent/adapt-react-class (aget js/ReactBootstrap "Navbar")))
+(def nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
+(def nav-item (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
 
 
 ;; -------------------------
 ;; Views
 
 (defn navigation []
-  [Navbar {:brand "It Sucks!" :inverse true}
-   [Nav
-    [NavItem {:href "/"} "Home"]
-    [NavItem {:href "/about"} "About"]]])
+  [nav-bar {:brand "It Sucks!" :inverse true}
+   [nav
+    [nav-item {:href "/"} "Home"]
+    [nav-item {:href "/about"} "About"]]])
 
 (def things-that-suck 
   [{:name "array_split" 
