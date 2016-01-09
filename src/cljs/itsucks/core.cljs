@@ -4,7 +4,7 @@
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
               [cljsjs.react-bootstrap]
-              [ajax.core :refer [GET POST]]))
+              [ajax.core :as ajax]))
 
 ;; -------------------------
 ;; Wrappers
@@ -12,6 +12,9 @@
 (def nav-bar (reagent/adapt-react-class (aget js/ReactBootstrap "Navbar")))
 (def nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
 (def nav-item (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
+
+(defn GET [url handler] 
+  (ajax/GET url {:handler handler :keywords? true :response-format :json}))
 
 ;; -------------------------
 ;; Views
@@ -38,10 +41,7 @@
         [:a {:href (str "/" name)} name]])))
 
 (defn home-page []
-  (GET "/api/projects" {:keywords? true :response-format :json :handler
-                                   (fn [response]
-                                     (.log js/console (str response))
-                                     (reset! projects response))})
+  (GET "/api/projects" #(reset! projects %))
   (fn []
     [:div
      [:h1 "itsucks.io" [:b "/welcome"]]
@@ -58,8 +58,7 @@
 (defn project-page [name]
   (do
     (reset! things-that-suck [])
-    (GET (reduce str ["/api/projects/" name "/complains"]) {:keywords? true :response-format :json 
-    :handler (fn [response] (reset! things-that-suck response))}))  
+    (GET (reduce str ["/api/projects/" name "/complains"]) #(reset! things-that-suck %)))  
   (fn [_]
     [:div 
     [:h1 "itsucks.io" [:b "/" name]]
