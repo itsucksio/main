@@ -13,7 +13,6 @@
 (def nav (reagent/adapt-react-class (aget js/ReactBootstrap "Nav")))
 (def nav-item (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
 
-
 ;; -------------------------
 ;; Views
 
@@ -23,21 +22,13 @@
     [nav-item {:href "/"} "Home"]
     [nav-item {:href "/about"} "About"]]])
 
-(def things-that-suck 
-  [{:name "array_split" 
-    :description "seriously, who made this, someone with bipolar disease?" 
-    :likes 0}
-   {:name "magic_quotes"
-    :description "it's like gencide, but in computer sience. Hitler would like it"
-    :likes 5}])
-
 (def projects (reagent/atom []))
 
 (defn sucking-list [things]
   (for [t things]
     [:div 
       [:h3 (:name t)]
-      [:div.description (:description t)]]))
+      [:div.description.realz (:description t)]]))
 
 (defn list-projects [projects]
   (for [p projects]
@@ -62,13 +53,18 @@
         (list-projects @projects)]
       [:p
         [:small "Please be nice to each other."]]])))
-    
+
+(def things-that-suck (reagent/atom []))    
 
 (defn project-page [name]
+  (do
+    (reset! things-that-suck [])
+    (GET (reduce str ["/api/projects/" name "/complains"]) {:keywords? true :response-format :json 
+    :handler (fn [response] (reset! things-that-suck response))}))  
   (fn [_]
     [:div 
     [:h1 "itsucks.io" [:b "/" name]]
-    (sucking-list things-that-suck)
+    (sucking-list @things-that-suck)
     [:div 
      [:a {:href "/"} "go to home page"]]]))
 

@@ -7,21 +7,35 @@
             [environ.core :refer [env]]
             [cheshire.core :as json]))
 
+(def projects
+  { :php [{:name "array_split" 
+           :description "seriously, who made this, someone with bipolar disease?" 
+           :likes 0}
+          {:name "magic_quotes"
+           :description "it's like gencide, but in computer sience. Hitler would like it"
+           :likes 5}]
+    :ziggo [{:name "internets" 
+             :description "this thing sucks like a cat that didn't drink for a week" 
+             :likes 3}
+            {:name "they hire idiots"
+             :description "it's anecdotal evidence, but still..."
+             :likes 2}]
+    :recruiters [{:name "they are stupid" 
+                  :description "you think Donald Trump is stupid? Think again." 
+                  :likes 3}]})
+
 (defn json-response [data & [status]]
   {:status  (or status 200)
    :headers {"Content-Type" "application/json; charset=utf-8"}
    :body    (json/generate-string data)})
 
-(defn get-projects [n]
-  (json-response (map (fn [n] {:name n}) ["php" "ziggo" "recruiters"])))
+(defn get-projects [a]
+  (json-response (map (fn [n] {:name n}) (keys projects))))
 
 (defn get-complaints [project]
-  (json-response [{:name "array_split" 
-                   :description "seriously, who made this, someone with bipolar disease?" 
-                   :likes 0}
-                  {:name "magic_quotes"
-                   :description "it's like gencide, but in computer sience. Hitler would like it"
-                   :likes 5}]))
+  (if (contains? projects (keyword project))
+    (json-response (projects (keyword project)))
+    (json-response {:error "not-found"} 404)))
 
 (def mount-target
   [:div#app
