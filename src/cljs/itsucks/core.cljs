@@ -22,21 +22,17 @@
 ;; -------------------------
 ;; Views
 
-(def success-message (reagent/atom nil))
-
 (defn navigation []
   [nav-bar {:brand "It Sucks!" :inverse true}
    [nav
     [nav-item {:href "/"} "Home"]
     [nav-item {:href "/about"} "About"]]])
 
-(def projects (reagent/atom []))
-
 (defn sucking-list [things]
   (for [t things]
     [:div 
       [:h3 (:name t)]
-      [:div.description.realz (:description t)]]))
+      [:div.description (:description t)]]))
 
 (defn list-projects [projects]
   (for [p projects]
@@ -45,7 +41,7 @@
       [:div
         [:a {:href (str "/" (:slug p))} name]])))
 
-(defn add-project-form []
+(defn add-project-form [success-message]
   (let [new-project-name (reagent/atom nil)]
     (fn []
       [:div
@@ -60,36 +56,34 @@
                                      :handler #(reset! success-message "Project sucessfully added!")}))} "Add project"]])))
 
 (defn home-page []
-  (GET "/api/projects" #(reset! projects %))
-  (fn []
-    [:div
-     (if (not (nil? @success-message))
-       [alert {:bsStyle "success" :dismissAfter 2000 :onDismiss #(reset! success-message nil)} @success-message])
-     [:h1 "itsucks.io" [:b "/welcome"]]
-     [:p "Welcome to it sucks, a place where we can give feedback in peace.
-          Please add your rants or create a new itsucks-project."]
+  (let [success-message (reagent/atom nil) projects (reagent/atom [])]
+    (GET "/api/projects" #(reset! projects %))
+    (fn []
       [:div
-        [:h3 "Top projects"]
-        (list-projects @projects)]
-      [:div
-        [:h4 "Add new project"]
-        [add-project-form]]
-      [:p
-        [:small "Please be nice to each other."]]]))
-
-(def current-project (reagent/atom []))
+       (if (not (nil? @success-message))
+         [alert {:bsStyle "success" :dismissAfter 2000 :onDismiss #(reset! success-message nil)} @success-message])
+       [:h1 "itsucks.io" [:b "/welcome"]]
+       [:p "Welcome to it sucks, a place where we can give feedback in peace.
+            Please add your rants or create a new itsucks-project."]
+        [:div
+          [:h3 "Top projects"]
+          (list-projects @projects)]
+        [:div
+          [:h4 "Add new project"]
+          [add-project-form success-message]]
+        [:p
+          [:small "Please be nice to each other."]]])))
 
 (defn project-page [slug]
-  (do
-    (reset! current-project [])
-    (GET (str "/api/projects/" slug) #(reset! current-project %)))
-  (fn [_]
-    [:div
-     [:h1 "itsucks.io" [:b "/" slug]]
-     [:p (:description @current-project)]
-     (sucking-list (:complaints @current-project))
-     [:div
-      [:a {:href "/"} "go to home page"]]]))
+  (let [current-project (reagent/atom [])]
+    (GET (str "/api/projects/" slug) #(reset! current-project %))
+    (fn [_]
+      [:div
+       [:h1 "itsucks.io" [:b "/" slug]]
+       [:p (:description @current-project)]
+       (sucking-list (:complaints @current-project))
+       [:div
+        [:a {:href "/"} "go to home page"]]])))
 
 (defn about-page []
   [:div
@@ -99,7 +93,7 @@
 (defn current-page []
   [:div
    [navigation]
-   [:div {:class "container"} [(session/get :current-page)]]])
+   [:div.container [(session/get :current-page)]]])
 
 ;; -------------------------
 ;; Routes
