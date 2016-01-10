@@ -12,6 +12,7 @@
                  [reagent-utils "0.1.7"]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
+                 [ring/ring-json "0.2.0"]
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
                  [environ "1.0.1"]
@@ -21,7 +22,9 @@
                  [venantius/accountant "0.1.6"
                   :exclusions [org.clojure/tools.reader]]
                  [cheshire "5.5.0"]
-                 [cljs-ajax "0.5.2"]]
+                 [cljs-ajax "0.5.2"]
+                 [korma "0.4.0"]
+                 [org.postgresql/postgresql "9.4.1207.jre7"]]
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]

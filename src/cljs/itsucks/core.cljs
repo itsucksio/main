@@ -15,8 +15,8 @@
 (def input (reagent/adapt-react-class (aget js/ReactBootstrap "Input")))
 (def button (reagent/adapt-react-class (aget js/ReactBootstrap "Button")))
 
-(defn GET [url handler] 
-  (ajax/GET url {:handler handler :keywords? true :response-format :json}))
+(defn GET [url handler]
+    (ajax/GET url {:handler handler :keywords? true :response-format :json}))
 
 ;; -------------------------
 ;; Views
@@ -40,7 +40,7 @@
     (let [name (:name p)]
       (.log js/console name)
       [:div
-        [:a {:href (str "/" name)} name]])))
+        [:a {:href (str "/" (:slug p))} name]])))
 
 (defn add-project-form []
   (let [new-project-name (reagent/atom nil)]
@@ -68,16 +68,16 @@
       [:p
         [:small "Please be nice to each other."]]]))
 
-(def things-that-suck (reagent/atom []))
+(def current-project (reagent/atom []))
 
-(defn project-page [name]
+(defn project-page [slug]
   (do
-    (reset! things-that-suck [])
-    (GET (reduce str ["/api/projects/" name "/complains"]) #(reset! things-that-suck %)))  
+    (reset! current-project [])
+    (GET (str "/api/projects/" slug) #(reset! current-project %)))
   (fn [_]
     [:div 
-    [:h1 "itsucks.io" [:b "/" name]]
-    (sucking-list @things-that-suck)
+    [:h1 "itsucks.io" [:b "/" slug]]
+    (sucking-list (:complaints @current-project))
     [:div 
      [:a {:href "/"} "go to home page"]]]))
 
@@ -100,8 +100,8 @@
 (secretary/defroute "/about" []
                     (session/put! :current-page about-page))
 
-(secretary/defroute "/:name" [name]
-                    (session/put! :current-page (project-page name)))
+(secretary/defroute "/:slug" [slug]
+                    (session/put! :current-page (project-page slug)))
 
 ;; -------------------------
 ;; Initialize app
