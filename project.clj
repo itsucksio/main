@@ -24,6 +24,7 @@
                  [cheshire "5.5.0"]
                  [cljs-ajax "0.5.2"]
                  [korma "0.4.0"]
+                 [slugger "1.0.1"]
                  [org.postgresql/postgresql "9.4.1207.jre7"]]
 
   :plugins [[lein-environ "1.0.1"]

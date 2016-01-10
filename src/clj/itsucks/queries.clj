@@ -24,3 +24,10 @@
 (defn get-complaints [id]
   (select complaints
           (where {:project_id id})))
+
+(defn create-project
+  ([name slug description]
+   (insert projects
+           (values {:name name :slug slug :description description})))
+  ([name slug]
+   (create-project name slug nil)))

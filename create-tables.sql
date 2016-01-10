@@ -25,3 +25,5 @@ INSERT INTO complaints(name, description, project_id) VALUES('magic_quotes', 'It
 INSERT INTO complaints(name, description, project_id) VALUES('internets', 'This thing sucks like a cat that didn''t drink for a week', 2);
 INSERT INTO complaints(name, description, project_id) VALUES('they hire idiots', 'It''s anecdotal evidence, but still...', 2);
 INSERT INTO complaints(name, description, project_id) VALUES('they are stupid', 'You think Donald Trump is stupid? Think again.', 3);
+
+SELECT setval('projects_id_seq', (SELECT MAX(id) FROM projects));

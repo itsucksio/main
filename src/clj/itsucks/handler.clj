@@ -1,19 +1,22 @@
 (ns itsucks.handler
-  (:require [compojure.core :refer [GET defroutes]]
+  (:require [compojure.core :refer [GET POST defroutes]]
             [ring.util.response :refer [response]]
             [compojure.route :refer [not-found resources]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [include-js include-css]]
             [itsucks.middleware :refer [wrap-middleware]]
             [environ.core :refer [env]]
-            [cheshire.core :as j]
-            [itsucks.queries :as q]))
+            [itsucks.queries :as q]
+            [slugger.core :refer [->slug]]))
 
 (defn get-projects []
   (q/get-projects))
 
 (defn get-project [slug]
   (q/get-project slug))
+
+(defn create-project [name]
+  (q/create-project name (->slug name)))
 
 (defn get-complaints [id]
   (q/get-complaints (read-string id)))
@@ -36,12 +39,15 @@
      (include-css (if (env :dev) "css/site.css" "css/site.min.css"))]
     [:body
      mount-target
+     (include-js "bower_components/bootstrap/dist/jquery.min.js")
+     (include-js "bower_components/jquery/dist/js/bootstrap.min.js")
      (include-js "js/app.js")]]))
 
 
 (defroutes routes
   (GET "/" [] loading-page)
   (GET "/api/projects" [] (response (get-projects)))
+  (POST "/api/projects" [name] (response (create-project name)))
   (GET "/api/projects/:slug" [slug] (response (get-project slug)))
   (GET "/api/projects/:id/complaints" [id] (response (get-complaints id)))
   (GET "*" [] loading-page)

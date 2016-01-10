@@ -4,7 +4,7 @@
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
               [cljsjs.react-bootstrap]
-              [ajax.core :as ajax]))
+              [ajax.core :as a]))
 
 ;; -------------------------
 ;; Wrappers
@@ -14,12 +14,15 @@
 (def nav-item (reagent/adapt-react-class (aget js/ReactBootstrap "NavItem")))
 (def input (reagent/adapt-react-class (aget js/ReactBootstrap "Input")))
 (def button (reagent/adapt-react-class (aget js/ReactBootstrap "Button")))
+(def alert (reagent/adapt-react-class (aget js/ReactBootstrap "Alert")))
 
 (defn GET [url handler]
-    (ajax/GET url {:handler handler :keywords? true :response-format :json}))
+    (a/GET url {:handler handler :keywords? true :response-format :json}))
 
 ;; -------------------------
 ;; Views
+
+(def success-message (reagent/atom nil))
 
 (defn navigation []
   [nav-bar {:brand "It Sucks!" :inverse true}
@@ -50,12 +53,18 @@
             :value @new-project-name 
             :placeholder "New project name"
             :on-change #(reset! new-project-name (-> % .-target .-value))}]
-      [button { :on-click (fn [_] (js/alert @new-project-name)) } "Add project"]])))
+      [button { :on-click (fn [_]
+                            (a/POST "/api/projects"
+                                    {:format :json
+                                     :params {:name @new-project-name}
+                                     :handler #(reset! success-message "Project sucessfully added!")}))} "Add project"]])))
 
 (defn home-page []
   (GET "/api/projects" #(reset! projects %))
   (fn []
     [:div
+     (if (not (nil? @success-message))
+       [alert {:bsStyle "success" :dismissAfter 2000 :onDismiss #(reset! success-message nil)} @success-message])
      [:h1 "itsucks.io" [:b "/welcome"]]
      [:p "Welcome to it sucks, a place where we can give feedback in peace.
           Please add your rants or create a new itsucks-project."]
