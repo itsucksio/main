@@ -84,11 +84,12 @@
     (reset! current-project [])
     (GET (str "/api/projects/" slug) #(reset! current-project %)))
   (fn [_]
-    [:div 
-    [:h1 "itsucks.io" [:b "/" slug]]
-    (sucking-list (:complaints @current-project))
-    [:div 
-     [:a {:href "/"} "go to home page"]]]))
+    [:div
+     [:h1 "itsucks.io" [:b "/" slug]]
+     [:p (:description @current-project)]
+     (sucking-list (:complaints @current-project))
+     [:div
+      [:a {:href "/"} "go to home page"]]]))
 
 (defn about-page []
   [:div
