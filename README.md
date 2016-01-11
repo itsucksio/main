@@ -13,9 +13,8 @@ To prepare dev environment:
 brew install docker-machine
 brew install docker-compose
 ```
-- Install Postgres (only for the CLI tools)
+
 - `docker-compose up -d`
-- `psql -h $(docker-machine ip dev) -U itsucks -f create-tables.sql itsucks` (password: itsucks)
 - `bower install`
 
-Now simply use `lein figwheel` to run in development mode, this will watch and hotreload and runs both the frontend and backend.
+Now simply use `lein figwheel` to run in development mode, this will watch and hotreload and runs both the frontend and backend. The migrations will run auto-magically.

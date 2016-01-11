@@ -25,7 +25,8 @@
                  [cljs-ajax "0.5.2"]
                  [korma "0.4.0"]
                  [slugger "1.0.1"]
-                 [org.postgresql/postgresql "9.4.1207.jre7"]]
+                 [org.postgresql/postgresql "9.4.1207.jre7"]
+                 [ragtime "0.5.2"]]
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]
