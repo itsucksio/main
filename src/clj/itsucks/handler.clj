@@ -39,8 +39,8 @@
      (include-css (if (env :dev) "css/site.css" "css/site.min.css"))]
     [:body
      mount-target
-     (include-js "bower_components/bootstrap/dist/jquery.min.js")
-     (include-js "bower_components/jquery/dist/js/bootstrap.min.js")
+     (include-js "bower_components/jquery/dist/jquery.min.js")
+     (include-js "bower_components/bootstrap/dist/js/bootstrap.min.js")
      (include-js "js/app.js")]]))
 
 
@@ -51,7 +51,7 @@
   (GET "/api/projects/:slug" [slug] (response (get-project slug)))
   (GET "/api/projects/:id/complaints" [id] (response (get-complaints id)))
   (GET "*" [] loading-page)
-  
+
   (resources "/")
   (not-found "Not Found"))
 

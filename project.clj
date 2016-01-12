@@ -6,9 +6,8 @@
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [ring-server "0.4.0"]
-                 [reagent "0.5.1"
+                 [reagent "0.6.0-alpha"
                   :exclusions [org.clojure/tools.reader]]
-                 [reagent-forms "0.5.13"]
                  [reagent-utils "0.1.7"]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
@@ -23,6 +22,7 @@
                   :exclusions [org.clojure/tools.reader]]
                  [cheshire "5.5.0"]
                  [cljs-ajax "0.5.2"]
+                 [cljsjs/auth0-lock "7.7.1-0"]
                  [korma "0.4.0"]
                  [slugger "1.0.1"]
                  [org.postgresql/postgresql "9.4.1207.jre7"]
@@ -53,7 +53,7 @@
   {:assets
    {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
 
-  :cljsbuild {:builds {:app {:source-paths ["src/cljs" "src/cljc"]
+  :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler {:output-to "target/cljsbuild/public/js/app.js"
                                         :output-dir "target/cljsbuild/public/js/out"
                                         :asset-path   "js/out"
