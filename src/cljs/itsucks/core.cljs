@@ -1,18 +1,22 @@
 (ns itsucks.core
-  (:require [reagent.core :as reagent]
+  (:require [reagent.core :as r]
             [reagent.session :as session]
             [reagent.dom.server]
             [secretary.core :as secretary :include-macros true]
             [accountant.core :as accountant]
             [itsucks.reactbs :as bs]
             [ajax.core :as a]
-            [cljsjs.auth0-lock]))
+            [cljsjs.auth0-lock]
+            [alandipert.storage-atom :refer [local-storage]]))
 
 (defn GET [url handler]
   (a/GET url {:handler handler :keywords? true :response-format :json}))
 
 ;; -------------------------
 ;; Views
+
+(def token (local-storage (r/atom {}) :token))
+(def user-profile (local-storage (r/atom {}) :user-profile))
 
 (defn navigation [authenticated]
   [bs/navbar {:inverse true}
@@ -23,16 +27,20 @@
     [bs/nav-item {:href "/about"} "About"]]
    [bs/nav {:pullRight true}
     (if authenticated
-      [bs/nav-dropdown {:title "Daan Debie"}
+      [bs/nav-dropdown {:title (.-name @user-profile) :id "login-menu"}
        [bs/menu-item "Profile"]
        [bs/menu-item "Action"]
        [bs/menu-item {:divider true}]
-       [bs/menu-item "Logout"]]
+       [bs/menu-item {:onSelect (fn [_]
+                                  (.log js/console "Logout")
+                                  (reset! token nil))} "Logout"]]
       [bs/nav-item {:onClick (fn [_]
                                (let [lock (js/Auth0Lock. "tHsRnRDmBDNHIxHWjiHovQiP4qwFa3Ix" "itsucks.eu.auth0.com")]
                                  (.log js/console "Show dialog")
-                                 (.show lock {} (fn [err profile token]
-                                               (.log js/console (str "callbackz " err profile token))))))} "Login"])]])
+                                 (.show lock (fn [err profile id_token]
+                                               (reset! token id_token)
+                                               (.log js/console (str profile))
+                                               (reset! user-profile profile)))))} "Login"])]])
 
 (defn sucking-list [things]
   (for [t things]
@@ -48,7 +56,7 @@
        [:a {:href (str "/" (:slug p))} name]])))
 
 (defn add-project-form [success-message]
-  (let [new-project-name (reagent/atom nil)]
+  (let [new-project-name (r/atom nil)]
     (fn []
       [:div
        [bs/input {:type        "text"
@@ -62,7 +70,7 @@
                                         :handler #(reset! success-message "Project sucessfully added!")}))} "Add project"]])))
 
 (defn home-page []
-  (let [success-message (reagent/atom nil) projects (reagent/atom [])]
+  (let [success-message (r/atom nil) projects (r/atom [])]
     (GET "/api/projects" #(reset! projects %))
     (fn []
       [:div
@@ -81,7 +89,7 @@
         [:small "Please be nice to each other."]]])))
 
 (defn project-page [slug]
-  (let [current-project (reagent/atom [])]
+  (let [current-project (r/atom [])]
     (GET (str "/api/projects/" slug) #(reset! current-project %))
     (fn [_]
       [:div
@@ -98,7 +106,7 @@
 
 (defn current-page []
   [:div
-   [navigation false]
+   [navigation (not (nil? @token))]
    [:div.container [(session/get :current-page)]]])
 
 ;; -------------------------
@@ -117,7 +125,7 @@
 ;; Initialize app
 
 (defn mount-root []
-  (reagent/render [current-page] (.getElementById js/document "app")))
+  (r/render [current-page] (.getElementById js/document "app")))
 
 (defn init! []
   (accountant/configure-navigation!)

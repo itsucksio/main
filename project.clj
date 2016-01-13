@@ -23,6 +23,7 @@
                  [cheshire "5.5.0"]
                  [cljs-ajax "0.5.2"]
                  [cljsjs/auth0-lock "7.7.1-0"]
+                 [alandipert/storage-atom "1.2.4"]
                  [korma "0.4.0"]
                  [slugger "1.0.1"]
                  [org.postgresql/postgresql "9.4.1207.jre7"]
