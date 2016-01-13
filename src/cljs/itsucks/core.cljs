@@ -5,7 +5,8 @@
             [secretary.core :as secretary :include-macros true]
             [accountant.core :as accountant]
             [itsucks.reactbs :as bs]
-            [ajax.core :as a]))
+            [ajax.core :as a]
+            [cljsjs.auth0-lock]))
 
 (defn GET [url handler]
   (a/GET url {:handler handler :keywords? true :response-format :json}))
@@ -14,7 +15,9 @@
 ;; Views
 
 (defn navigation [authenticated]
-  [bs/nav-bar {:brand "It Sucks!" :inverse true}
+  [bs/navbar {:inverse true}
+   [bs/navbar-brand
+    [:a {:href "/"} "It Sucks!"]]
    [bs/nav
     [bs/nav-item {:href "/"} "Home"]
     [bs/nav-item {:href "/about"} "About"]]
@@ -25,11 +28,15 @@
        [bs/menu-item "Action"]
        [bs/menu-item {:divider true}]
        [bs/menu-item "Logout"]]
-      [bs/nav-item "Login"])]])
+      [bs/nav-item {:onClick (fn [_]
+                               (let [lock (js/Auth0Lock. "tHsRnRDmBDNHIxHWjiHovQiP4qwFa3Ix" "itsucks.eu.auth0.com")]
+                                 (.log js/console "Show dialog")
+                                 (.show lock {} (fn [err profile token]
+                                               (.log js/console (str "callbackz " err profile token))))))} "Login"])]])
 
 (defn sucking-list [things]
   (for [t things]
-    [:div
+    [:div {:key (:id t)}
      [:h3 (:name t)]
      [:div.description (:description t)]]))
 
@@ -37,7 +44,7 @@
   (for [p projects]
     (let [name (:name p)]
       (.log js/console name)
-      [:div
+      [:div {:key (:id p)}
        [:a {:href (str "/" (:slug p))} name]])))
 
 (defn add-project-form [success-message]
