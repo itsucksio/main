@@ -67,3 +67,5 @@ crashlytics-build.properties
 fabric.properties
 
 bower_components
+
+site.min.css

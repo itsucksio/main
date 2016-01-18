@@ -1,7 +1,6 @@
-(ns itsucks
+(ns itsucks.middleware
     (:require
-      [ring.middleware.defaults :refer [api-defaults wrap-defaults]]
-      [ring.middleware.json :as json] [ring.middleware.json :as json]))
+      [ring.middleware.defaults :refer [api-defaults wrap-defaults]]))
 
 (defn wrap-middleware [handler]
-      (wrap-defaults handler api-defaults json/wrap-json-params json/wrap-json-response json/wrap-json-body {:keywords? true}))
+      (wrap-defaults handler api-defaults))
