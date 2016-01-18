@@ -15,8 +15,8 @@
 ;; -------------------------
 ;; Views
 
-(def token (local-storage (r/atom {}) :token))
-(def user-profile (local-storage (r/atom {}) :user-profile))
+(def token (local-storage (r/atom nil) :token))
+(def user-profile (local-storage (r/atom nil) :user-profile))
 
 (defn navigation [authenticated]
   [bs/navbar {:inverse true}
@@ -27,20 +27,19 @@
     [bs/nav-item {:href "/about"} "About"]]
    [bs/nav {:pullRight true}
     (if authenticated
-      [bs/nav-dropdown {:title (.-name @user-profile) :id "login-menu"}
+      [bs/nav-dropdown {:title (:name @user-profile) :id "login-menu"}
        [bs/menu-item "Profile"]
        [bs/menu-item "Action"]
        [bs/menu-item {:divider true}]
        [bs/menu-item {:onSelect (fn [_]
-                                  (.log js/console "Logout")
+                                  (reset! user-profile nil)
                                   (reset! token nil))} "Logout"]]
       [bs/nav-item {:onClick (fn [_]
                                (let [lock (js/Auth0Lock. "tHsRnRDmBDNHIxHWjiHovQiP4qwFa3Ix" "itsucks.eu.auth0.com")]
-                                 (.log js/console "Show dialog")
                                  (.show lock (fn [err profile id_token]
                                                (reset! token id_token)
-                                               (.log js/console (str profile))
-                                               (reset! user-profile profile)))))} "Login"])]])
+                                               (.log js/console id_token)
+                                               (reset! user-profile (js->clj profile :keywordize-keys true))))))} "Login"])]])
 
 (defn sucking-list [things]
   (for [t things]

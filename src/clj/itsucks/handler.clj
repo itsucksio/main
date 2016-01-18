@@ -7,9 +7,19 @@
             [itsucks.middleware :refer [wrap-middleware]]
             [environ.core :refer [env]]
             [itsucks.queries :as q]
-            [slugger.core :refer [->slug]]))
+            [slugger.core :refer [->slug]]
+            [buddy.auth.backends.token :refer (jws-backend)]
+            [buddy.auth.middleware :refer (wrap-authentication)]
+            [buddy.auth :refer [authenticated?]]
+            [buddy.core.codecs :refer [safebase64->str]]))
 
-(defn get-projects []
+(def secret (safebase64->str "rFleprwmYEAnHE-0jrhlxwdiPGzqXdO0t4ed3gyoDeWvWYICjDtz7-giey6Vz7kZ"))
+(def backend (jws-backend {:secret secret :token-name "Bearer" :on-error (fn [req e]
+                                                                           (println (str e)))}))
+
+(defn get-projects [req]
+  (println (str req))
+  (println (str (authenticated? req)))
   (q/get-projects))
 
 (defn get-project [slug]
@@ -46,7 +56,7 @@
 
 (defroutes routes
   (GET "/" [] loading-page)
-  (GET "/api/projects" [] (response (get-projects)))
+  (GET "/api/projects" req (response (get-projects req)))
   (POST "/api/projects" [name] (response (create-project name)))
   (GET "/api/projects/:slug" [slug] (response (get-project slug)))
   (GET "/api/projects/:id/complaints" [id] (response (get-complaints id)))
@@ -55,4 +65,6 @@
   (resources "/")
   (not-found "Not Found"))
 
-(def app (wrap-middleware #'routes))
+(def app (-> routes
+             (wrap-authentication backend)
+             wrap-middleware))
