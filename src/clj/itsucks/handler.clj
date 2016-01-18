@@ -11,9 +11,9 @@
             [buddy.auth.backends.token :refer (jws-backend)]
             [buddy.auth.middleware :refer (wrap-authentication)]
             [buddy.auth :refer [authenticated?]]
-            [buddy.core.codecs :refer [safebase64->str]]))
+            [buddy.core.codecs :refer [safebase64->bytes]]))
 
-(def secret (safebase64->str "rFleprwmYEAnHE-0jrhlxwdiPGzqXdO0t4ed3gyoDeWvWYICjDtz7-giey6Vz7kZ"))
+(def secret (safebase64->bytes "rFleprwmYEAnHE-0jrhlxwdiPGzqXdO0t4ed3gyoDeWvWYICjDtz7-giey6Vz7kZ"))
 (def backend (jws-backend {:secret secret :token-name "Bearer" :on-error (fn [req e]
                                                                            (println (str e)))}))
 
