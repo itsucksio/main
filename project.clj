@@ -109,7 +109,11 @@
                               :css-dirs ["resources/public/css"]
                               :ring-handler itsucks.handler/app}
 
-                   :env {:dev true}
+                   :env {:dev true
+                         :database-host "192.168.99.100"
+                         :database-user "itsucks"
+                         :database-password "itsucks"
+                         :database-name "itsucks"}
 
                    :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
                                               :compiler {:main "itsucks.dev"
