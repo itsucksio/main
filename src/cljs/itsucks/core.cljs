@@ -112,10 +112,10 @@
 ;; Routes
 
 (secretary/defroute "/" []
-                    (session/put! :current-page home-page))
+                    (session/put! :current-page #'home-page))
 
 (secretary/defroute "/about" []
-                    (session/put! :current-page about-page))
+                    (session/put! :current-page #'about-page))
 
 (secretary/defroute "/:slug" [slug]
                     (session/put! :current-page (project-page slug)))
